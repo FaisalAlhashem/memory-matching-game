@@ -26,7 +26,8 @@ let options = [
 ];
 let select1 = null,
   select2 = null,
-  score = 0;
+  score = 0,
+  on = true;
 
 const getUnassignedPad = () => {
   const rand = Math.floor(Math.random() * unassignedPads.length);
@@ -53,6 +54,7 @@ for (let i = 0; i < 8; i++) {
   }
 }
 const failed = () => {
+  on = false;
   select1.classList.toggle("show");
   select1.classList.toggle("hidden");
   select2.classList.toggle("show");
@@ -61,12 +63,15 @@ const failed = () => {
   select2.style.color = select2.classList.contains("show") ? "#000000" : "";
   select1 = null;
   select2 = null;
+  on = true;
 };
 
 // adding event listeners
 for (const pod of pads) {
   pod.addEventListener("click", function (e) {
     const curPad = e.target;
+    if (curPad.classList.contains("show")) return;
+    if (!on) return;
     curPad.classList.toggle("show");
     curPad.classList.toggle("hidden");
     curPad.style.color = curPad.classList.contains("show") ? "#000000" : "";
@@ -74,8 +79,10 @@ for (const pod of pads) {
       select2 = curPad;
       if (select1.textContent === select2.textContent) {
         score++;
-      } else setTimeout(failed(), 100);
+        scoreSpan.textContent = `score: ${score}`;
+        select1 = null;
+        select2 = null;
+      } else setTimeout(failed, 500);
     } else select1 = curPad;
-    console.log(select1, select2);
   });
 }
