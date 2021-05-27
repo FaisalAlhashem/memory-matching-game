@@ -82,7 +82,10 @@ for (const pod of pads) {
         scoreSpan.textContent = `score: ${score}`;
         select1 = null;
         select2 = null;
-      } else setTimeout(failed, 500);
+      } else {
+        on = false;
+        setTimeout(failed, 500);
+      }
     } else select1 = curPad;
   });
 }
