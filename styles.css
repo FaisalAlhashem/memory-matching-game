@@ -49,6 +49,14 @@ body {
   color: rgb(241, 241, 241);
 }
 
+.pad::selection {
+  user-select: none;
+}
+
+.pad::-moz-selection {
+  user-select: none;
+}
+
 .hidden {
   background: #000000;
   color: #000000;

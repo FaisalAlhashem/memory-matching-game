@@ -1,8 +1,9 @@
 //getting dom elements
-const pads = document.querySelectorAll(".pad");
+const unassignedPads = [...document.querySelectorAll(".pad")];
 const scoreSpan = document.querySelector(".score");
-const unassignedPads = [...pads];
+const winMessage = document.querySelector(".congrats");
 const assignedPads = [];
+const solvedPads = [];
 let options = [
   0,
   1,
@@ -26,8 +27,9 @@ let options = [
 ];
 let select1 = null,
   select2 = null,
-  score = 0,
+  score = 30,
   on = true;
+scoreSpan.textContent = `score: ${score}`;
 
 const getUnassignedPad = () => {
   const rand = Math.floor(Math.random() * unassignedPads.length);
@@ -67,8 +69,12 @@ const failed = () => {
 };
 
 // adding event listeners
-for (const pod of pads) {
+for (const pod of assignedPads) {
   pod.addEventListener("click", function (e) {
+    if (score <= 0) {
+      alert("you lost the game");
+      return;
+    }
     const curPad = e.target;
     if (curPad.classList.contains("show")) return;
     if (!on) return;
@@ -78,14 +84,21 @@ for (const pod of pads) {
     if (select1) {
       select2 = curPad;
       if (select1.textContent === select2.textContent) {
-        score++;
         scoreSpan.textContent = `score: ${score}`;
+        solvedPads.push(select1);
+        solvedPads.push(select2);
         select1 = null;
         select2 = null;
       } else {
         on = false;
+        score--;
+        scoreSpan.textContent = `score: ${score}`;
         setTimeout(failed, 500);
       }
     } else select1 = curPad;
+    if (solvedPads.length >= 16) {
+      winMessage.classList.toggle("hide");
+      on = !on;
+    }
   });
 }
